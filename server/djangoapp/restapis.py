@@ -1,34 +1,58 @@
+# Uncomment the imports below before you add the function code
 import requests
-import json
-# import related models here
-from requests.auth import HTTPBasicAuth
+import os
+from dotenv import load_dotenv
 
 
-# Create a `get_request` to make HTTP GET requests
-# e.g., response = requests.get(url, params=params, headers={'Content-Type': 'application/json'},
-#                                     auth=HTTPBasicAuth('apikey', api_key))
+load_dotenv()
+
+backend_url = os.getenv(
+    'backend_url', default="http://localhost:3030")
+sentiment_analyzer_url = os.getenv(
+    'sentiment_analyzer_url',
+    default="http://localhost:5050/")
 
 
-# Create a `post_request` to make HTTP POST requests
-# e.g., response = requests.post(url, params=kwargs, json=payload)
+# def get_request(endpoint, **kwargs):
+def get_request(endpoint, **kwargs):
+    params = ""
+    if (kwargs):
+        for key, value in kwargs.items():
+            params = params+key+"="+value+"&"
+
+    request_url = backend_url+endpoint+"?"+params
+
+    print("GET from {} ".format(request_url))
+    try:
+        # Call get method of requests library with URL and parameters
+        response = requests.get(request_url)
+        return response.json()
+    except Exception as err:
+        # If any error occurs
+        print(f"Unexpected {err=}, {type(err)=}")
+        print("Network exception occurred")
 
 
-# Create a get_dealers_from_cf method to get dealers from a cloud function
-# def get_dealers_from_cf(url, **kwargs):
-# - Call get_request() with specified arguments
-# - Parse JSON results into a CarDealer object list
-
-
-# Create a get_dealer_reviews_from_cf method to get reviews by dealer id from a cloud function
-# def get_dealer_by_id_from_cf(url, dealerId):
-# - Call get_request() with specified arguments
-# - Parse JSON results into a DealerView object list
-
-
-# Create an `analyze_review_sentiments` method to call Watson NLU and analyze text
 # def analyze_review_sentiments(text):
-# - Call get_request() with specified arguments
-# - Get the returned sentiment label such as Positive or Negative
+def analyze_review_sentiments(text):
+    request_url = sentiment_analyzer_url+"analyze/"+text
+    try:
+        # Call get method of requests library with URL and parameters
+        response = requests.get(request_url)
+        return response.json()
+    except Exception as err:
+        print(f"Unexpected {err=}, {type(err)=}")
+        print("Network exception occurred")
 
 
-
+# def post_review(data_dict):
+# Add code for posting review
+def post_review(data_dict):
+    request_url = backend_url+"/insert_review"
+    try:
+        response = requests.post(request_url, json=data_dict)
+        print(response.json())
+        return response.json()
+    except Exception as err:
+        print(f"Unexpected {err=}, {type(err)=}")
+        print("Network exception occurred")

@@ -1,0 +1,24 @@
+Run Lint Python Files
+  Run Checkout Repository
+    /usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+    Successfully checked out main branch.
+  Run Set up Python
+    Version 3.12 successfully set up.
+  Run Install dependencies
+    pip install flake8
+    Successfully installed flake8.
+  Run Run Linter
+    find . -name "*.py" -exec flake8 {} +
+    Linted all the python files successfully
+
+Run Lint JavaScript Files
+  Run Checkout Repository
+    Successfully checked out main branch.
+  Run Install Node.js
+    Node.js v14 successfully set up.
+  Run Install JSHint
+    npm install jshint --global
+    added 1 package in 1.2s
+  Run Run Linter
+    find ./server/database -name "*.js" -exec jshint {} +
+    Linted all the js files successfully
